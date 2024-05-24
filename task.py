@@ -59,7 +59,8 @@ def run_task():
         # stream.start()
 
         trial_active = True
-        spaces = 0
+        stim_repeats = 0
+        ans_plays = 0
         while trial_active:
             for event in pygame.event.get():
                 # stop recording if they've pressed any of the keys (will count that as an incorrect response)
@@ -72,8 +73,12 @@ def run_task():
                 if event.type == pygame.KEYDOWN:
                     # SPACE if the subject needs to hear the answer
                     # NOTE: can do a version where the subject can play the answer as many times as they want
-                    if event.key == pygame.K_SPACE:
-                        spaces += 1
+                    if event.unicode == 'r':
+                        stim_repeats += 1
+                        pygame.mixer.music.load(f"stimuli/{stim}.wav")
+                        pygame.mixer.music.play()
+                    elif event.key == pygame.K_SPACE:
+                        ans_plays += 1
                         ans = kor_to_eng[stim]
                         pygame.mixer.music.load(f"stimuli/{ans}.wav")
                         pygame.mixer.music.play()
@@ -86,6 +91,8 @@ def run_task():
                     running = False
 
         pygame.display.flip()
+
+        print((stim_repeats, ans_plays))
 
         if not running:
             break
